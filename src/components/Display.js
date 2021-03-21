@@ -16,7 +16,7 @@ const Container = styled.div`
 function Display({ gameOver, text }) {
   return (
     <Container gameOver={gameOver}>
-      {text}:
+      {text}
     </Container>
   );
 }

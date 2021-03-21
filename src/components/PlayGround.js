@@ -6,6 +6,8 @@ import styled, { css } from 'styled-components';
 
 import { usePlayer } from './../hooks/usePlayer';
 import { useStage } from './../hooks/useStage';
+import { useInterval } from './../hooks/useInterval';
+import { useGameStatus } from './../hooks/useGameStatus';
 
 import Stage from './Stage';
 import Display from './Display';
@@ -43,7 +45,8 @@ function PlayGround() {
   const [gameOver, setGameOver] = useState(false);
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
-  const [stage, setStage] = useStage(player, resetPlayer);
+  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -54,11 +57,23 @@ function PlayGround() {
   const startGame = () => {
     // reset
     setStage(createStage());
+    setDropTime(1000);
     resetPlayer();
     setGameOver(false);
+    setScore(0);
+    setRows(0);
+    setLevel(0);
   }
 
   const drop = () => {
+    // increase level when player has cleard 10 rows
+    if (rows > (level + 1) * 10) {
+      setLevel(prev => prev + 1);
+
+      // also increase speed
+      setDropTime(1000 / (level + 1) + 200);
+    }
+
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
@@ -72,26 +87,43 @@ function PlayGround() {
     }
   }
 
+  const keyUp = ({ keyCode }) => {
+    if (!gameOver) {
+      if (keyCode === 40) {
+        setDropTime(1000 / (level + 1) + 200);
+      }
+    }
+  }
+
   const dropPlayer = () => {
+    setDropTime(null);
     drop();
   }
 
   const move = ({ keyCode }) => {
     if (!gameOver) {
       if (keyCode === 37) {
+        // left arrow
         movePlayer(-1);
       } else if (keyCode === 39) {
+        // right arrow
         movePlayer(1);
       } else if (keyCode === 40) {
+        // down arrow
         dropPlayer();
       } else if (keyCode === 38) {
+        // up arrow
         playerRotate(stage, 1);
       }
     }
   }
 
+  useInterval(() => {
+    drop();
+  }, dropTime);
+
   return (
-    <Container role="button" tabIndex="0" onKeyDown={event => move(event)}>
+    <Container role="button" tabIndex="0" onKeyDown={move} onKeyUp={keyUp}>
       <div className="tetris">
         <Stage stage={stage} />
         <aside className="right-section">
@@ -99,9 +131,9 @@ function PlayGround() {
             <Display gameOver={gameOver} text="Game Over" />
           ) : (
             <div className="score-board">
-              <Display text="Score" />
-              <Display text="Rows" />
-              <Display text="Round" />
+              <Display text={`Score: ${score}`} />
+              <Display text={`Rows: ${rows}`} />
+              <Display text={`Round: ${level}`} />
             </div>
           )}
           <Button callback={startGame} />

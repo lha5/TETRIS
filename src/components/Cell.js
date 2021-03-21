@@ -8,7 +8,7 @@ const Container = styled.div`
   width: 30px;
   height: 30px;
   background-color: ${props => props.color};
-  border: ${props => props.type === 0 ? '1px solid #ccc' : '1px solid #999'};
+  border: 1px solid #ccc;
 `;
 
 function Cell({ type }) {

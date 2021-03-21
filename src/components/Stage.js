@@ -5,17 +5,17 @@ import styled from 'styled-components';
 import Cell from './Cell';
 
 const Container = styled.div`
-  opacity: ${props => props.isStarted ? 1 : 0.5};
+  /* opacity: ${props => props.isStarted ? 1 : 0.5}; */
   display: grid;
   grid-template-columns: repeat(${props => props.width}, 1fr);
-  grid-template-rows: repeat(${props => props.height}, calc(34.16vh / ${props => props.width}));
+  grid-template-rows: repeat(${props => props.height}, calc(646 / ${props => props.width}));
   border: 3px solid black;
   background-color: white;
 `;
 
-function Stage({ GetStarted, stage }) {
+function Stage({ stage }) {
   return (
-    <Container isStarted={GetStarted} width={stage[0].length} height={stage.length}>
+    <Container width={stage[0].length} height={stage.length}>
       {stage.map(row => row.map((cell, x) => (
         <Cell key={x} type={cell[0]} />
       )))}

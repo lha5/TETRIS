@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { createStage, checkCollision } from '../gameHelpers';
 
@@ -48,6 +48,8 @@ function PlayGround() {
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
+  const [coordinate, setCoordinate] = useState(0);
+  
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
@@ -55,7 +57,7 @@ function PlayGround() {
   }
 
   const startGame = () => {
-    // reset
+    // reset game
     setStage(createStage());
     setDropTime(1000);
     resetPlayer();
@@ -87,6 +89,7 @@ function PlayGround() {
     }
   }
 
+  // move tetromino with keyboard ---------------------
   const keyUp = ({ keyCode }) => {
     if (!gameOver) {
       if (keyCode === 40) {
@@ -117,15 +120,29 @@ function PlayGround() {
       }
     }
   }
+  // --------------------------------------------------
+
+  // move tetromino with moving mouse
+  useEffect(() => {
+    if (!gameOver) {
+      if (coordinate > 0) {
+        movePlayer(1);
+      } else if (coordinate < 0) {
+        movePlayer(-1);
+      }
+    }
+  }, [coordinate]);
 
   useInterval(() => {
     drop();
   }, dropTime);
 
   return (
-    <Container role="button" tabIndex="0" onKeyDown={move} onKeyUp={keyUp}>
+    // move tetromino with keyboard
+    // <Container role="button" tabIndex="0" onKeyDown={move} onKeyUp={keyUp}>
+    <Container>
       <div className="tetris">
-        <Stage stage={stage} />
+        <Stage stage={stage} setCoordinate={setCoordinate} />
         <aside className="right-section">
           {gameOver ? (
             <Display gameOver={gameOver} text="Game Over" />

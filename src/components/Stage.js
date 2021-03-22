@@ -15,7 +15,9 @@ const Container = styled.div`
 function Stage({ stage, setCoordinate }) {
   const detectMovement = (event) => {
     if (event.movementX) {
-      setCoordinate(event.movementX);
+      if (event.movementX > -3 && event.movementX < 3) {
+        setCoordinate(event.movementX);
+      }
     }
   }
   

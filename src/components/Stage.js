@@ -29,6 +29,7 @@ const Container = styled.div`
 `;
 
 function Stage({ gameOver, stage, setCoordinate }) {
+  // delay function
   const delay = (ms) => {
     const now = new Date().getTime();
 
@@ -38,8 +39,9 @@ function Stage({ gameOver, stage, setCoordinate }) {
   const detectMovement = (event) => {
     if (event.movementX) {
       if (event.movementX > -3 && event.movementX < 3) {
-        delay(50);
-        
+        // This function is for delay setting value in setCoordinate.
+        // So, it makes player easy to control block's position.
+        delay(75);
         setCoordinate(event.movementX);
       }
     }

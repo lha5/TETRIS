@@ -38,10 +38,10 @@ function Stage({ gameOver, stage, setCoordinate }) {
 
   const detectMovement = (event) => {
     if (event.movementX) {
-      if (event.movementX > -3 && event.movementX < 3) {
+      if (event.movementX > -4 && event.movementX < 4) {
         // This function is for delay setting value in setCoordinate.
         // So, it makes player easy to control block's position.
-        delay(75);
+        delay(55);
         setCoordinate(event.movementX);
       }
     }

@@ -24,8 +24,6 @@ ul {
   list-style: none;
 }
 
-input[type="button"],
-input[type="submit"],
 button {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -39,12 +37,6 @@ button {
   padding: 0.5em 0.7em;
 }
 
-input[type="button"]:active,
-input[type="button"]:focus,
-input[type="button"]:hover,
-input[type="submit"]:active,
-input[type="submit"]:focus,
-input[type="submit"]:hover,
 button:active,
 button:focus,
 button:hover {

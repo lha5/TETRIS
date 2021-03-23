@@ -9,9 +9,8 @@ export const TETROMINOS = {
   },
 };
 
-export const randomTetromino = () => {
+export const makeTetromino = () => {
   const tetrominos = 'O';
-  // const randTetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
 
   return TETROMINOS[tetrominos];
 }

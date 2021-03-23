@@ -44,7 +44,7 @@ function PlayGround() {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+  const [player, updatePlayerPos, resetPlayer] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
@@ -56,8 +56,8 @@ function PlayGround() {
     }
   }
 
+  // reset game
   const startGame = () => {
-    // reset game
     setStage(createStage());
     setDropTime(1000);
     resetPlayer();
@@ -81,46 +81,12 @@ function PlayGround() {
     } else {
       // game over
       if (player.pos.y < 1) {
-        console.log('GAME OVER');
         setGameOver(true);
         setDropTime(null);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
     }
   }
-
-  // move tetromino with keyboard ---------------------
-  const keyUp = ({ keyCode }) => {
-    if (!gameOver) {
-      if (keyCode === 40) {
-        setDropTime(1000 / (level + 1) + 200);
-      }
-    }
-  }
-
-  const dropPlayer = () => {
-    setDropTime(null);
-    drop();
-  }
-
-  const move = ({ keyCode }) => {
-    if (!gameOver) {
-      if (keyCode === 37) {
-        // left arrow
-        movePlayer(-1);
-      } else if (keyCode === 39) {
-        // right arrow
-        movePlayer(1);
-      } else if (keyCode === 40) {
-        // down arrow
-        dropPlayer();
-      } else if (keyCode === 38) {
-        // up arrow
-        playerRotate(stage, 1);
-      }
-    }
-  }
-  // --------------------------------------------------
 
   // move tetromino with moving mouse
   useEffect(() => {
@@ -133,27 +99,22 @@ function PlayGround() {
     }
   }, [coordinate]);
 
+  // drop tetromino every second(in level 0)
   useInterval(() => {
     drop();
   }, dropTime);
 
   return (
-    // move tetromino with keyboard
-    // <Container role="button" tabIndex="0" onKeyDown={move} onKeyUp={keyUp}>
     <Container>
       <div className="tetris">
-        <Stage stage={stage} setCoordinate={setCoordinate} />
+        <Stage stage={stage} setCoordinate={setCoordinate} gameOver={gameOver} />
         <aside className="right-section">
-          {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
-          ) : (
-            <div className="score-board">
-              <Display text={`Score: ${score}`} />
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Round: ${level}`} />
-            </div>
-          )}
-          <Button callback={startGame} />
+          <div className="score-board">
+            <Display text={`Score: ${score}`} />
+            <Display text={`Rows: ${rows}`} />
+            <Display text={`Round: ${level}`} />
+          </div>
+          <Button callback={startGame} gameOver={gameOver} dropTime={dropTime} />
         </aside>
       </div>
     </Container>

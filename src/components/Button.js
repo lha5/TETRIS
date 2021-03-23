@@ -10,10 +10,10 @@ const CustomButton = styled.button`
   padding: 20px;
 `;
 
-function Button({ callback }) {
+function Button({ callback, dropTime, gameOver }) {
   return (
     <CustomButton onClick={callback}>
-      Get Started
+      {gameOver ? 'Get Started' : (dropTime === null ? 'Get Started' : 'Restart')}
     </CustomButton>
   );
 }
